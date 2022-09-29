@@ -7,31 +7,75 @@ app.use(bodyParser.json())
 
 const users = [
     {
-        Name: "femisola",
-        Surname: "Alawiye",
+        name: "femisola",
+        surname: "Alawiye",
         email: "femisola@gmail.com",
         phone_no: "08132851453"
     },
     {
-        Name: "femisola",
-        Surname: "Alaiye",
+        name: "femisola",
+        surname: "Alaiye",
         email: "fesola@gmail.com",
         phone_no: "08132853"
     },
     {
-        Name: "sola",
-        Surname: "wiye",
+        name: "sola",
+        surname: "wiye",
         email: "femi@gmail.com",
         phone_no: "081851453"
     },
 ]
     
 
-app.get("/profile/all", (req,res) =>{
+app.get("/profile/:email", (req,res) => {
+    const {email} = req.params
+    const user = users.find(x => x.id == email)
+    
+    if (!user) {
+        res.status(404).send({
+            message: "user not found",
+        })
+    } 
+
     res.status(200).send({
-        message: " All credidential displayed",
+        message: "user found",
+        data: user
+    })
+})
+
+//get all users
+app.get('/users', (req, res) => { 
+
+    res.status(200).send({
+        message: "All users",
         data: users
     })
+
+})
+
+
+//create user
+
+app.post('/create', (req, res) => { 
+
+    const { firstname, othername, occupation, age } = req.body
+
+    const user = {
+        id: users.length + 1,
+        firstname: firstname,   
+        othername: othername,
+        occupation: occupation,
+        age: age
+    }
+
+    users.push(user)
+
+    res.status(200).send({
+        message: "user created",
+        data: user
+    })
+
+
 })
 
 app.listen(port, () =>{
